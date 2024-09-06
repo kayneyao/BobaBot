@@ -52,14 +52,13 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    joystick.y().onTrue(new InstantCommand(()->elevatorSys.setpoint(Constants.ElevatorConstants.STAND_POSITION)));
-    joystick.b().onTrue(new InstantCommand(()->elevatorSys.setpoint(Constants.ElevatorConstants.SIT_POSITION)));
-    joystick.a().onTrue(new InstantCommand(()->elevatorSys.setpoint(Constants.ElevatorConstants.HOME_POSITION)));
+    joystick.y().onTrue(new InstantCommand(()->elevatorSys.pid(Constants.ElevatorConstants.STAND_POSITION)));
+    joystick.b().onTrue(new InstantCommand(()->elevatorSys.pid(Constants.ElevatorConstants.SIT_POSITION)));
+    joystick.a().onTrue(new InstantCommand(()->elevatorSys.pid(Constants.ElevatorConstants.HOME_POSITION)));
   }
 
   public RobotContainer() {
     configureBindings();
-    elevatorSys.setDefaultCommand(new ElevatorPID());
   }
 
   public Command getAutonomousCommand() {

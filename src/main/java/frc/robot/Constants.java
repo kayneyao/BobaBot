@@ -14,8 +14,8 @@ public class Constants {
 
         public static double kS = 0.0;
         public static double kV = 0.0;
-        public static double kG = -0.4;
-        public static double kP = 2.0;
+        public static double kG = 12.0;
+        public static double kP = 2;
         public static double kI = 0.0;
         public static double kD = 0.0;
     }

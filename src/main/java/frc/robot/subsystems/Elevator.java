@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +25,7 @@ public class Elevator extends SubsystemBase{
 
     private Elevator(){
         motorFx = new TalonFX(Constants.ElevatorConstants.MOTOR_ID);
+        motorFx.setNeutralMode(NeutralModeValue.Brake);
 
         m_mmReq = new MotionMagicVoltage(0);
         cfg = new TalonFXConfiguration();
@@ -53,9 +55,18 @@ public class Elevator extends SubsystemBase{
         motorFx = new TalonFX(Constants.ElevatorConstants.MOTOR_ID);
     }
 
-    public void pid(){
+    public void pid(double input){
+        setpoint = input;
         motorFx.setControl(m_mmReq.withPosition(setpoint));
         SmartDashboard.putNumber("Elevator Position", motorFx.getPosition().getValueAsDouble());
+    }
+
+    public boolean stopPID(){
+        if(-1 < motorFx.getPosition().getValue() - setpoint || motorFx.getPosition().getValue() - setpoint <= 1){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public void setpoint(double input){
