@@ -28,6 +28,7 @@ public class Elevator extends SubsystemBase{
         m_mmReq = new MotionMagicVoltage(0);
         cfg = new TalonFXConfiguration();
         mm = cfg.MotionMagic;
+        setpoint = Constants.ElevatorConstants.HOME_POSITION;
 
         cfg.Slot0.kS = Constants.ElevatorConstants.kS;
         cfg.Slot0.kV = Constants.ElevatorConstants.kV;

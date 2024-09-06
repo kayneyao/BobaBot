@@ -22,7 +22,7 @@ import frc.robot.subsystems.Elevator;
 
 public class RobotContainer {
   private Elevator elevatorSys = Elevator.getSystem();
-  private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps * 0.2; // kSpeedAt12VoltsMps desired top speed
+  private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps * 0.15; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 0.4 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
@@ -33,8 +33,6 @@ public class RobotContainer {
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
                                                                // driving in open loop
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -46,10 +44,6 @@ public class RobotContainer {
             .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
-    joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-    joystick.b().whileTrue(drivetrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))));
-
     // reset the field-centric heading on left bumper press
     joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
 
@@ -58,8 +52,9 @@ public class RobotContainer {
     }
     drivetrain.registerTelemetry(logger::telemeterize);
 
-    joystick.x().onTrue(new InstantCommand(()->elevatorSys.setpoint(Constants.ElevatorConstants.SERVE_POSITION)));
-    joystick.y().onTrue(new InstantCommand(()->elevatorSys.setpoint(Constants.ElevatorConstants.HOME_POSITION)));
+    joystick.y().onTrue(new InstantCommand(()->elevatorSys.setpoint(Constants.ElevatorConstants.STAND_POSITION)));
+    joystick.b().onTrue(new InstantCommand(()->elevatorSys.setpoint(Constants.ElevatorConstants.SIT_POSITION)));
+    joystick.a().onTrue(new InstantCommand(()->elevatorSys.setpoint(Constants.ElevatorConstants.HOME_POSITION)));
   }
 
   public RobotContainer() {
